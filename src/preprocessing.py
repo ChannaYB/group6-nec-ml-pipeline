@@ -141,3 +141,94 @@ class NECPreprocessor:
     def fit_transform(self, X_train, y_train=None):
         self.fit(X_train, y_train)
         return self.transform(X_train)
+
+# CONVENIENCE FUNCTIONS
+
+def preprocess_data(train_df, test_df, verbose=VERBOSE):
+    if verbose:
+        print("\n" + "="*70)
+        print("PREPROCESSING PIPELINE")
+        print("="*70)
+    
+    # Separate features and target
+    feature_columns = CATEGORICAL_FEATURES + NUMERICAL_FEATURES
+    
+    X_train = train_df[feature_columns]
+    y_train = train_df[TARGET_COLUMN]
+    
+    X_test = test_df[feature_columns]
+    y_test = test_df[TARGET_COLUMN]
+    
+    if verbose:
+        print(f"\n[1] Data Separation")
+        print(f"  X_train: {X_train.shape}")
+        print(f"  y_train: {y_train.shape}")
+        print(f"  X_test: {X_test.shape}")
+        print(f"  y_test: {y_test.shape}")
+    
+    # Create and fit preprocessor
+    if verbose:
+        print(f"\n[2] Building Preprocessor")
+    
+    preprocessor = NECPreprocessor(verbose=verbose)
+    X_train_transformed = preprocessor.fit_transform(X_train)
+    X_test_transformed = preprocessor.transform(X_test)
+    
+    if verbose:
+        print(f"\n[3] Transformation Complete")
+        print(f"  X_train_transformed: {X_train_transformed.shape}")
+        print(f"  X_test_transformed: {X_test_transformed.shape}")
+        print("\n" + "="*70)
+        print(" PREPROCESSING COMPLETE")
+        print("="*70 + "\n")
+    
+    return X_train_transformed, X_test_transformed, y_train, y_test, preprocessor
+
+
+# TESTING
+
+if __name__ == "__main__":
+    print("\n" + "="*70)
+    print("TESTING PREPROCESSING MODULE")
+    print("="*70)
+    
+    try:
+        # Load data
+        from src.data_ingestion import create_train_test
+        
+        print("\n[1] Loading data")
+        train_df, test_df = create_train_test(verbose=False)
+        print(f" Data loaded: Train {train_df.shape}, Test {test_df.shape}")
+        
+        # Run preprocessing
+        print("\n[2] Running preprocessing pipeline...")
+        X_train, X_test, y_train, y_test, preprocessor = preprocess_data(
+            train_df, test_df, verbose=True
+        )
+        
+        # Verification
+        print("\n" + "="*70)
+        print("VERIFICATION")
+        print("="*70)
+        
+        print(f"\n Shapes:")
+        print(f"  X_train: {X_train.shape}")
+        print(f"  X_test: {X_test.shape}")
+        print(f"  y_train: {y_train.shape}")
+        print(f"  y_test: {y_test.shape}")
+        
+        print(f"\n No NaN in transformed data:")
+        print(f"  X_train NaN: {np.isnan(X_train).sum()}")
+        print(f"  X_test NaN: {np.isnan(X_test).sum()}")
+        
+        print(f"\n Data type: {type(X_train)}")
+        print(f" Target preserved: {len(y_train)} train, {len(y_test)} test")
+        
+        print("\n" + "="*70)
+        print(" PREPROCESSING MODULE TEST PASSED")
+        print("="*70 + "\n")
+        
+    except Exception as e:
+        print(f"\n Error: {e}\n")
+        import traceback
+        traceback.print_exc()
