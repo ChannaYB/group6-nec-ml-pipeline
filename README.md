@@ -5,7 +5,12 @@ End-to-end machine learning pipeline for optimizing power plant selection based 
 **Institution:** Keele University Business School  
 **Module:** MAN-40389 - Advanced Data Analytics and Machine Learning  
 **Assessment:** Group Assignment - Group 06
-**Member Numbers:** 25009641, 24038643, 25027572, 25037027 & 25042861
+**Member Numbers:**
+- 25009641
+- 24038643
+- 25027572
+- 25037027
+- 25042861
 
 ---
 
