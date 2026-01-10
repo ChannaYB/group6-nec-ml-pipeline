@@ -25,6 +25,9 @@ from src.config import (
 
 
 def create_random_forest_model():
+    """
+    Create Random Forest Regressor.
+    """
     model = RandomForestRegressor(
         n_estimators=RF_N_ESTIMATORS,
         max_depth=RF_MAX_DEPTH,
@@ -39,6 +42,9 @@ def create_random_forest_model():
 
 
 def create_gradient_boosting_model():
+    """
+    Create Gradient Boosting Regressor.
+    """
     model = GradientBoostingRegressor(
         n_estimators=GB_N_ESTIMATORS,
         max_depth=GB_MAX_DEPTH,
@@ -53,6 +59,9 @@ def create_gradient_boosting_model():
 
 
 def create_linear_regression_model():
+    """
+    Create Linear Regression model.
+    """
     model = LinearRegression(
         fit_intercept=LINEAR_FIT_INTERCEPT
     )
@@ -61,6 +70,9 @@ def create_linear_regression_model():
 
 
 def create_model_pipeline(preprocessor, model_type='random_forest', verbose=VERBOSE):
+    """
+    Create complete ML pipeline: Preprocessor + Model.
+    """
     # Select model
     if model_type == 'random_forest':
         model = create_random_forest_model()
@@ -87,6 +99,9 @@ def create_model_pipeline(preprocessor, model_type='random_forest', verbose=VERB
 
 
 def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
+    """
+    Train the model pipeline
+    """
     if verbose:
         print(f"\nℹ Training model...")
         print(f"  Training samples: {len(X_train):,}")
@@ -101,6 +116,9 @@ def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
 
 
 def evaluate_model(pipeline, X, y, demand_ids, plant_ids, dataset_name="Data", verbose=VERBOSE):
+    """
+    Evaluate model performance
+    """
     # Get predictions
     y_pred = pipeline.predict(X)
     
@@ -134,6 +152,9 @@ def evaluate_model(pipeline, X, y, demand_ids, plant_ids, dataset_name="Data", v
 
 
 def evaluate_with_logo_cv(pipeline, train_df, n_splits=5, verbose=VERBOSE):
+    """
+    Evaluate model using Leave-One-Group-Out Cross-Validation.
+    """
     if verbose:
         print(f"\n{'='*70}")
         print(f"LOGO CROSS-VALIDATION ({n_splits} folds)")

@@ -1,3 +1,7 @@
+"""
+Preprocessing Module for NEC ML Pipeline
+Handles feature transformation, scaling, and encoding
+"""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
