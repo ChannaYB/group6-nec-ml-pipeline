@@ -2,7 +2,6 @@
 Data Ingestion Module for NEC ML Pipeline
 Loads 3 raw files, merges them, cleans data, and creates train/test splits.
 
-Author:
 """
 
 import sys

@@ -1,3 +1,7 @@
+"""
+Data Splitting Module for NEC ML Pipeline
+"""
+
 import pandas as pd
 import numpy as np
 from src.config import GROUP_COLUMN, NUM_PLANTS, RANDOM_SEED
