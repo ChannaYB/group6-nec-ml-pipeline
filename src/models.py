@@ -27,6 +27,13 @@ from src.config import (
 def create_random_forest_model():
     """
     Create Random Forest Regressor.
+    
+    Random Forest is chosen as DEFAULT model because:
+    - Handles non-linear relationships well
+    - Robust to outliers
+    - Feature importance available
+    - Good generalization
+
     """
     model = RandomForestRegressor(
         n_estimators=RF_N_ESTIMATORS,
@@ -44,6 +51,18 @@ def create_random_forest_model():
 def create_gradient_boosting_model():
     """
     Create Gradient Boosting Regressor.
+    
+    Gradient Boosting is chosen as ALTERNATIVE model because:
+    - Often achieves best performance
+    - Sequential learning captures complex patterns
+    - Good for structured/tabular data
+    
+    Returns:
+    --------
+    GradientBoostingRegressor : Configured model
+    
+    Reference: Individual Q3 - Alternative model justification
+
     """
     model = GradientBoostingRegressor(
         n_estimators=GB_N_ESTIMATORS,
@@ -72,6 +91,23 @@ def create_linear_regression_model():
 def create_model_pipeline(preprocessor, model_type='random_forest', verbose=VERBOSE):
     """
     Create complete ML pipeline: Preprocessor + Model.
+    
+    This is the "unified scikit-learn Pipeline" required by assessment.
+    
+    Parameters:
+    -----------
+    preprocessor : sklearn transformer
+        Fitted preprocessor
+    model_type : str
+        'random_forest', 'gradient_boosting', or 'linear'
+    verbose : bool
+        Print pipeline info
+    
+    Returns:
+    --------
+    Pipeline : Complete ML pipeline
+    
+    Reference: Assessment Brief - "single scikit-learn Pipeline (preprocessor + regressor)"
     """
     # Select model
     if model_type == 'random_forest':
@@ -100,7 +136,26 @@ def create_model_pipeline(preprocessor, model_type='random_forest', verbose=VERB
 
 def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
     """
+
     Train the model pipeline
+
+    Train the model pipeline.
+    
+    Parameters:
+    -----------
+    pipeline : Pipeline
+        Complete pipeline (preprocessor + model)
+    X_train : pandas.DataFrame
+        Training features (RAW, before preprocessing)
+    y_train : pandas.Series
+        Training target
+    verbose : bool
+        Print training info
+    
+    Returns:
+    --------
+    Pipeline : Fitted pipeline
+
     """
     if verbose:
         print(f"\nℹ Training model...")
@@ -118,6 +173,37 @@ def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
 def evaluate_model(pipeline, X, y, demand_ids, plant_ids, dataset_name="Data", verbose=VERBOSE):
     """
     Evaluate model performance
+
+    Evaluate model performance.
+    
+    Calculates:
+    - RMSE (Root Mean Squared Error)
+    - R² Score
+    - Selection Error Rate
+    
+    Parameters:
+    -----------
+    pipeline : Pipeline
+        Fitted pipeline
+    X : pandas.DataFrame
+        Features (RAW)
+    y : pandas.Series
+        True target
+    demand_ids : pandas.Series
+        Demand IDs for selection error
+    plant_ids : pandas.Series
+        Plant IDs for selection table
+    dataset_name : str
+        Name for display (e.g., "Train", "Test")
+    verbose : bool
+        Print results
+    
+    Returns:
+    --------
+    dict : Evaluation metrics
+    
+    Reference: Assessment Brief - "RMSE and selection-error scorer"
+
     """
     # Get predictions
     y_pred = pipeline.predict(X)
@@ -154,6 +240,29 @@ def evaluate_model(pipeline, X, y, demand_ids, plant_ids, dataset_name="Data", v
 def evaluate_with_logo_cv(pipeline, train_df, n_splits=5, verbose=VERBOSE):
     """
     Evaluate model using Leave-One-Group-Out Cross-Validation.
+    
+    This is CRITICAL for NEC problem:
+    - Each fold leaves out entire demand groups
+    - Prevents data leakage (all plants for a demand stay together)
+    - Simulates real deployment (predicting for new demands)
+    
+    Parameters:
+    -----------
+    pipeline : Pipeline
+        Unfitted pipeline (will be fitted in each fold)
+    train_df : pandas.DataFrame
+        Training data with all columns
+    n_splits : int
+        Number of CV folds
+    verbose : bool
+        Print fold results
+    
+    Returns:
+    --------
+    dict : Cross-validation results
+    
+    Reference: Assessment Brief - "LOGO cross-validation"
+
     """
     if verbose:
         print(f"\n{'='*70}")

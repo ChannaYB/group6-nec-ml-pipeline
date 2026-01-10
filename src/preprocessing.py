@@ -26,7 +26,15 @@ from src.config import (
 )
 
 
-class NECPreprocessor:    
+class NECPreprocessor: 
+    """
+    Preprocessing pipeline for NEC dataset.
+    
+    Handles:
+    - Missing value imputation
+    - Numerical feature scaling
+    - Categorical feature encoding
+    """   
     def __init__(self, verbose=VERBOSE):
         """Initialize preprocessor."""
         self.verbose = verbose
@@ -34,6 +42,17 @@ class NECPreprocessor:
         self.feature_names_out = None
         
     def _create_numerical_pipeline(self):
+        """
+        Create pipeline for numerical features.
+        
+        Steps:
+        1. Impute missing values (median by default)
+        2. Scale features (StandardScaler by default)
+        
+        Returns:
+        --------
+        Pipeline : Numerical transformation pipeline
+        """
         steps = []
         
         # Step 1: Imputation
@@ -73,6 +92,18 @@ class NECPreprocessor:
         return Pipeline(steps)
     
     def build_preprocessor(self):
+        """
+        Build complete preprocessing pipeline.
+        
+        Uses ColumnTransformer to apply different transformations
+        to numerical and categorical features.
+        
+        Returns:
+        --------
+        ColumnTransformer : Complete preprocessing pipeline
+        
+        Reference: Assessment Brief - "unified scikit-learn Pipeline"
+        """
         if self.verbose:
             print(" Building preprocessing pipeline...")
             print(f"  Numerical features: {len(NUMERICAL_FEATURES)}")
@@ -102,6 +133,21 @@ class NECPreprocessor:
         return preprocessor
     
     def fit(self, X_train, y_train=None):
+        """
+        Fit preprocessor on training data.
+        
+        Parameters:
+        -----------
+        X_train : pandas.DataFrame
+            Training features (must include all feature columns)
+        y_train : pandas.Series, optional
+            Training target (not used, included for sklearn compatibility)
+        
+        Returns:
+        --------
+        self : NECPreprocessor
+            Fitted preprocessor
+        """
         if self.preprocessor is None:
             self.build_preprocessor()
         
@@ -127,6 +173,18 @@ class NECPreprocessor:
         return self
     
     def transform(self, X):
+        """
+        Transform features using fitted preprocessor.
+        
+        Parameters:
+        -----------
+        X : pandas.DataFrame
+            Features to transform
+        
+        Returns:
+        --------
+        numpy.ndarray : Transformed features
+        """
         if self.preprocessor is None:
             raise ValueError("Preprocessor not fitted! Call fit() first.")
         
@@ -143,12 +201,43 @@ class NECPreprocessor:
         return X_transformed
     
     def fit_transform(self, X_train, y_train=None):
+        """
+        Fit preprocessor and transform training data.
+        
+        Parameters:
+        -----------
+        X_train : pandas.DataFrame
+            Training features
+        y_train : pandas.Series, optional
+            Training target
+        
+        Returns:
+        --------
+        numpy.ndarray : Transformed training features
+        """
         self.fit(X_train, y_train)
         return self.transform(X_train)
 
 # CONVENIENCE FUNCTIONS
 
 def preprocess_data(train_df, test_df, verbose=VERBOSE):
+    """
+    Complete preprocessing workflow.
+    
+    Parameters:
+    -----------
+    train_df : pandas.DataFrame
+        Training data (with all columns)
+    test_df : pandas.DataFrame
+        Testing data (with all columns)
+    verbose : bool
+        Print progress
+    
+    Returns:
+    --------
+    tuple : (X_train_transformed, X_test_transformed, y_train, y_test, preprocessor)
+    
+    """
     if verbose:
         print("\n" + "="*70)
         print("PREPROCESSING PIPELINE")

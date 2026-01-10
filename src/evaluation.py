@@ -25,6 +25,18 @@ from src.config import (
 
 
 class ModelEvaluator:
+    """
+    Comprehensive model evaluation framework.
+    
+    Provides:
+    - LOGO Cross-Validation
+    - Train/Test evaluation
+    - Fold-level analysis
+    - Selection error tables
+    - Comparison reports
+    
+    Reference: Assessment Brief - "Evaluation outcomes (grouped train/test and LOGO)"
+    """
     def __init__(self, verbose=VERBOSE):
         """Initialize evaluator."""
         self.verbose = verbose
@@ -38,6 +50,36 @@ class ModelEvaluator:
         model_name="Model",
         run_logo_cv=True
     ):
+        """
+        Run comprehensive evaluation on a model.
+        
+        Steps:
+        1. LOGO Cross-Validation on training data
+        2. Fit pipeline on full training data
+        3. Train set evaluation
+        4. Test set evaluation
+        5. Generate selection error tables
+        
+        Parameters:
+        -----------
+        pipeline : sklearn Pipeline
+            Unfitted pipeline (will be cloned for CV, then fitted for train/test)
+        train_df : pandas.DataFrame
+            Training data
+        test_df : pandas.DataFrame
+            Testing data
+        model_name : str
+            Name for reporting
+        run_logo_cv : bool
+            Whether to run LOGO CV (slow for large models)
+        
+        Returns:
+        --------
+        dict : Comprehensive evaluation results
+        
+        Reference: Assessment Brief - "Grouped train/test and LOGO CV"
+        """
+
         if self.verbose:
             print("\n" + "="*70)
             print(f"COMPREHENSIVE EVALUATION: {model_name}")
@@ -157,6 +199,21 @@ class ModelEvaluator:
         return results
     
     def compare_models(self, model_results_dict):
+        """
+        Compare multiple models.
+        
+        Parameters:
+        -----------
+        model_results_dict : dict
+            Dictionary of {model_name: results}
+        
+        Returns:
+        --------
+        pandas.DataFrame : Comparison table
+        
+        Reference: Assessment Brief - "Comparison with untuned baseline"
+        """
+
         if self.verbose:
             print("\n" + "="*70)
             print("MODEL COMPARISON")
@@ -198,6 +255,22 @@ class ModelEvaluator:
         return comparison_df
     
     def generate_fold_analysis(self, cv_results, model_name="Model"):
+        """
+        Analyze performance across CV folds.
+        
+        Parameters:
+        -----------
+        cv_results : dict
+            Results from LOGO CV
+        model_name : str
+            Model name for reporting
+        
+        Returns:
+        --------
+        pandas.DataFrame : Fold-level metrics
+        
+        Reference: Assessment Brief - "Fold-level outputs"
+        """
         if cv_results is None:
             return None
         
@@ -236,6 +309,22 @@ class ModelEvaluator:
         return fold_df
     
     def save_evaluation_report(self, results, model_name="Model"):
+        """
+        Save comprehensive evaluation report to file.
+        
+        Parameters:
+        -----------
+        results : dict
+            Evaluation results
+        model_name : str
+            Model name
+        
+        Returns:
+        --------
+        str : Path to saved report
+        
+        Reference: Assessment Brief - "Artefacts and reproducibility"
+        """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"evaluation_{model_name.replace(' ', '_')}_{timestamp}.txt"
         filepath = Path(EVALUATION_REPORTS_DIR) / filename
@@ -292,6 +381,24 @@ class ModelEvaluator:
         return str(filepath)
     
     def save_selection_table(self, selection_table, model_name="Model", dataset_name="Test"):
+        """
+        Save selection error table to CSV.
+        
+        Parameters:
+        -----------
+        selection_table : pandas.DataFrame
+            Selection error table
+        model_name : str
+            Model name
+        dataset_name : str
+            Dataset name (Train/Test)
+        
+        Returns:
+        --------
+        str : Path to saved file
+        
+        Reference: Assessment Brief - "Per-scenario selection table"
+        """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"selection_{model_name.replace(' ', '_')}_{dataset_name}_{timestamp}.csv"
         filepath = Path(SELECTION_TABLES_DIR) / filename
@@ -307,6 +414,26 @@ class ModelEvaluator:
 # CONVENIENCE FUNCTIONS
 
 def evaluate_baseline_model(train_df, test_df, verbose=VERBOSE):
+    """
+    Evaluate baseline (untuned) Random Forest model.
+    
+    This provides the comparison benchmark for tuned models.
+    
+    Parameters:
+    -----------
+    train_df : pandas.DataFrame
+        Training data
+    test_df : pandas.DataFrame
+        Test data
+    verbose : bool
+        Print progress
+    
+    Returns:
+    --------
+    dict : Evaluation results
+    
+    Reference: Assessment Brief - "Comparison with the untuned baseline"
+    """
     from src.preprocessing import NECPreprocessor
     from src.models import create_model_pipeline
     from src.config import CATEGORICAL_FEATURES, NUMERICAL_FEATURES

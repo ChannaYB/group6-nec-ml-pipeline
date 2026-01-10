@@ -26,6 +26,31 @@ sns.set_palette("husl")
 
 
 def plot_logo_cv_folds(cv_results, model_name="Model", save=True, show=False):
+    """
+    Plot LOGO CV performance across folds.
+    
+    Creates a figure with 3 subplots:
+    - RMSE per fold
+    - R² per fold
+    - Selection Error per fold
+    
+    Parameters:
+    -----------
+    cv_results : dict
+        Cross-validation results
+    model_name : str
+        Model name for title
+    save : bool
+        Save plot to file
+    show : bool
+        Display plot
+    
+    Returns:
+    --------
+    str : Path to saved plot (if save=True)
+    
+    Reference: Assessment Brief - "Fold-level outputs"
+    """
     if cv_results is None:
         print("No CV results to plot")
         return None
@@ -93,6 +118,29 @@ def plot_logo_cv_folds(cv_results, model_name="Model", save=True, show=False):
 
 
 def plot_model_comparison(comparison_df, save=True, show=False):
+    """
+    Plot comparison of multiple models.
+    
+    Creates bar plots comparing:
+    - Test RMSE
+    - Test Selection Error
+    - CV Selection Error (if available)
+    
+    Parameters:
+    -----------
+    comparison_df : pandas.DataFrame
+        Comparison table from ModelEvaluator.compare_models()
+    save : bool
+        Save plot to file
+    show : bool
+        Display plot
+    
+    Returns:
+    --------
+    str : Path to saved plot (if save=True)
+    
+    Reference: Assessment Brief - "Comparison with untuned baseline"
+    """
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     
     models = comparison_df['Model'].values
@@ -178,6 +226,28 @@ def plot_model_comparison(comparison_df, save=True, show=False):
 
 def plot_prediction_scatter(y_true, y_pred, dataset_name="Test", model_name="Model", 
                             save=True, show=False):
+    """
+    Plot actual vs predicted costs (scatter plot).
+    
+    Parameters:
+    -----------
+    y_true : array-like
+        True costs
+    y_pred : array-like
+        Predicted costs
+    dataset_name : str
+        Dataset name (Train/Test)
+    model_name : str
+        Model name
+    save : bool
+        Save plot
+    show : bool
+        Display plot
+    
+    Returns:
+    --------
+    str : Path to saved plot
+    """
     fig, ax = plt.subplots(figsize=(8, 8))
     
     # Scatter plot
