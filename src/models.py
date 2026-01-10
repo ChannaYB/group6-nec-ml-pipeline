@@ -33,6 +33,7 @@ def create_random_forest_model():
     - Robust to outliers
     - Feature importance available
     - Good generalization
+
     """
     model = RandomForestRegressor(
         n_estimators=RF_N_ESTIMATORS,
@@ -61,6 +62,7 @@ def create_gradient_boosting_model():
     GradientBoostingRegressor : Configured model
     
     Reference: Individual Q3 - Alternative model justification
+
     """
     model = GradientBoostingRegressor(
         n_estimators=GB_N_ESTIMATORS,
@@ -76,6 +78,9 @@ def create_gradient_boosting_model():
 
 
 def create_linear_regression_model():
+    """
+    Create Linear Regression model.
+    """
     model = LinearRegression(
         fit_intercept=LINEAR_FIT_INTERCEPT
     )
@@ -131,6 +136,9 @@ def create_model_pipeline(preprocessor, model_type='random_forest', verbose=VERB
 
 def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
     """
+
+    Train the model pipeline
+
     Train the model pipeline.
     
     Parameters:
@@ -147,6 +155,7 @@ def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
     Returns:
     --------
     Pipeline : Fitted pipeline
+
     """
     if verbose:
         print(f"\nℹ Training model...")
@@ -163,6 +172,8 @@ def train_model(pipeline, X_train, y_train, verbose=VERBOSE):
 
 def evaluate_model(pipeline, X, y, demand_ids, plant_ids, dataset_name="Data", verbose=VERBOSE):
     """
+    Evaluate model performance
+
     Evaluate model performance.
     
     Calculates:
@@ -192,6 +203,7 @@ def evaluate_model(pipeline, X, y, demand_ids, plant_ids, dataset_name="Data", v
     dict : Evaluation metrics
     
     Reference: Assessment Brief - "RMSE and selection-error scorer"
+
     """
     # Get predictions
     y_pred = pipeline.predict(X)
@@ -250,6 +262,7 @@ def evaluate_with_logo_cv(pipeline, train_df, n_splits=5, verbose=VERBOSE):
     dict : Cross-validation results
     
     Reference: Assessment Brief - "LOGO cross-validation"
+
     """
     if verbose:
         print(f"\n{'='*70}")

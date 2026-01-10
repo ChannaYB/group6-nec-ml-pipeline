@@ -49,6 +49,9 @@ def calculate_selection_error(y_true, y_pred, demand_ids):
 
 
 def selection_error_scorer(estimator, X, y, demand_ids=None):
+    """
+    Calculate plant selection error rate.
+    """
     if demand_ids is None:
         raise ValueError("demand_ids must be provided for selection error calculation")
     
@@ -63,6 +66,10 @@ def selection_error_scorer(estimator, X, y, demand_ids=None):
 
 
 def get_selection_error_table(y_true, y_pred, demand_ids, plant_ids):
+    """
+    Generate detailed selection error table.
+    """
+    
     # Convert to numpy
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
