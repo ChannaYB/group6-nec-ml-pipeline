@@ -27,6 +27,16 @@ An automated system that predicts generation costs and selects optimal power pla
 
 ##  Quick Start
 
+## Recommended Branch
+- `main`: Stable and fully integrated pipeline
+- Feature branches:
+  - `feature/data-pipeline`: Data ingestion & orchestration
+  - `feature/preprocessing`: Data cleaning & feature engineering
+  - `feature/models`: Model definitions and training
+  - `feature/tuning-integration-v2`: Hyperparameter tuning & integration
+  - `feature/evaluation`: Evaluation metrics and reports
+
+
 ### Prerequisites
 ```
 Python 3.8+
@@ -140,6 +150,11 @@ python -m pytest -q tests/test_tuning.py
 - min_samples_leaf: 2
 
 ---
+
+## Known Issues
+- Pipeline may fail if `data/raw/` is missing required CSVs
+- Large datasets may cause memory issues (use `--quick` mode)
+- Current model selection error ~42% (future work: improve with ensemble methods)
 
 ##  Environment Details
 
@@ -256,3 +271,8 @@ python main.py
 ```
 
 ---
+
+![Python](https://img.shields.io/badge/python-3.8+-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
